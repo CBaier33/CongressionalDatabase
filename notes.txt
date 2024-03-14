@@ -1,1 +1,172 @@
-CREATE TABLE congressman (state VARCHAR, branch VARCHAR, party VARCHAR, name VARCHAR, url VARCHAR)
+sudo -u postgres psql congressman
+
+congressman=# \dt
+              List of relations
+ Schema |      Name       | Type  |  Owner
+--------+-----------------+-------+----------
+ public | representatives | table | postgres
+ public | senators        | table | postgres
+ public | urls            | table | postgres
+(3 rows)
+
+congressman=# create table representatives as
+congressman-# select id, state, branch, party, district, name
+congressman-# from congress_info
+congressman-# where branch = 'House';
+SELECT 435
+congressman=# select * from representatives;
+
+ id  | state | branch |    party    |  district   |           name
+-----+-------+--------+-------------+-------------+--------------------------
+   1 | AK    | House  | Republican  | At-Large    | Donald Young
+   4 | AL    | House  | Democrat    | District 7  | Terri Sewell
+   5 | AL    | House  | Republican  | District 1  | Bradley Byrne
+   6 | AL    | House  | Republican  | District 2  | Martha Roby
+   7 | AL    | House  | Republican  | District 3  | Mike Rogers
+   8 | AL    | House  | Republican  | District 4  | Robert Aderholt
+   9 | AL    | House  | Republican  | District 5  | Mo Brooks
+  10 | AL    | House  | Republican  | District 6  | Gary Palmer
+  13 | AR    | House  | Republican  | District 1  | Rick Crawford
+  14 | AR    | House  | Republican  | District 2  | French Hill
+  ...
+
+congressman=# create table senators as
+select id, state, branch, party, rank, name
+from congress_info
+where branch = 'Senate';
+SELECT 100
+congressman=# select * from senators;
+
+ id  | state | branch |    party    |  rank  |          name
+-----+-------+--------+-------------+--------+------------------------
+   2 | AK    | Senate | Republican  | Junior | Dan Sullivan
+   3 | AK    | Senate | Republican  | Senior | Lisa Murkowski
+  11 | AL    | Senate | Democrat    | Junior | Doug Jones
+  12 | AL    | Senate | Republican  | Senior | Richard Shelby
+  17 | AR    | Senate | Republican  | Junior | Tom Cotton
+  18 | AR    | Senate | Republican  | Senior | John Boozman
+  29 | AZ    | Senate | Democrat    | Senior | Kyrsten Sinema
+  30 | AZ    | Senate | Republican  | Junior | Martha McSally
+  82 | CA    | Senate | Democrat    | Junior | Kamala Harris
+  83 | CA    | Senate | Democrat    | Senior | Dianne Feinstein
+...
+
+congressman=# select * from urls;
+ id  |                               url
+-----+-----------------------------------------------------------------
+   1 | https://votesmart.org/candidate/26717/donald-young
+   2 | https://votesmart.org/candidate/114964/dan-sullivan
+   3 | https://votesmart.org/candidate/15841/lisa-murkowski
+   4 | https://votesmart.org/candidate/121621/terri-sewell
+   5 | https://votesmart.org/candidate/27584/bradley-byrne
+   6 | https://votesmart.org/candidate/71604/martha-roby
+   7 | https://votesmart.org/candidate/5705/mike-rogers
+   8 | https://votesmart.org/candidate/441/robert-aderholt
+   9 | https://votesmart.org/candidate/121610/mo-brooks
+  10 | https://votesmart.org/candidate/146274/gary-palmer
+...
+
+''' UNION '''
+
+# All Democrat Congressman
+congressman=# select * from senators
+congressman-# where party = 'Democrat'
+congressman-# union
+congressman-# select * from representatives
+congressman-# where party = 'Democrat';
+
+ id  | state | branch |  party   |    rank     |           name
+-----+-------+--------+----------+-------------+--------------------------
+ 173 | IL    | House  | Democrat | District 6  | Sean Casten
+ 447 | TX    | House  | Democrat | District 16 | Veronica Escobar
+ 103 | DE    | Senate | Democrat | Senior      | Tom Carper
+  63 | CA    | House  | Democrat | District 44 | Nanette Barragan
+  93 | CT    | House  | Democrat | District 1  | John Larson
+  99 | CT    | Senate | Democrat | Senior      | Richard Blumenthal
+ 265 | MN    | Senate | Democrat | Junior      | Tina Smith
+ 352 | NY    | House  | Democrat | District 3  | Thomas Suozzi
+...
+
+# All Republican Congressman
+congressman=# select * from senators
+where state = 'FL'
+union
+select * from representatives
+where state = 'FL';
+
+ id  | state | branch |   party    |    rank     |           name
+-----+-------+--------+------------+-------------+--------------------------
+ 111 | FL    | House  | Democrat   | District 24 | Frederica Wilson
+ 109 | FL    | House  | Democrat   | District 22 | Ted Deutch
+ 127 | FL    | House  | Republican | District 3  | Ted Yoho
+ 125 | FL    | House  | Republican | District 2  | Neal Dunn
+ 118 | FL    | House  | Republican | District 11 | Daniel Webster
+ 117 | FL    | House  | Republican | District 1  | Matt Gaetz
+ 122 | FL    | House  | Republican | District 17 | Greg Steube
+ 119 | FL    | House  | Republican | District 12 | Gus Bilirakis
+ 114 | FL    | House  | Democrat   | District 5  | Al Lawson Jr.
+ 132 | FL    | Senate | Republican | Senior      | Marco Rubio
+ 120 | FL    | House  | Republican | District 15 | Ross Spano
+ 124 | FL    | House  | Republican | District 19 | Francis Rooney
+ 110 | FL    | House  | Democrat   | District 23 | Debbie Wasserman Schultz
+ 121 | FL    | House  | Republican | District 16 | Vern Buchanan
+ 104 | FL    | House  | Democrat   | District 10 | Val Demings
+ 128 | FL    | House  | Republican | District 4  | John Rutherford
+ 123 | FL    | House  | Republican | District 18 | Brian Mast
+ 105 | FL    | House  | Democrat   | District 13 | Charlie Crist Jr.
+ 115 | FL    | House  | Democrat   | District 7  | Stephanie Murphy
+ 106 | FL    | House  | Democrat   | District 14 | Kathy Castor
+ 108 | FL    | House  | Democrat   | District 21 | Lois Frankel
+ 113 | FL    | House  | Democrat   | District 27 | Donna Shalala
+ 129 | FL    | House  | Republican | District 6  | Michael Waltz
+ 126 | FL    | House  | Republican | District 25 | Mario Diaz-Balart
+ 112 | FL    | House  | Democrat   | District 26 | Debbie Mucarsel-Powell
+ 107 | FL    | House  | Democrat   | District 20 | Alcee Hastings Sr.
+ 131 | FL    | Senate | Republican | Junior      | Rick Scott
+ 130 | FL    | House  | Republican | District 8  | Bill Posey
+ 116 | FL    | House  | Democrat   | District 9  | Darren Soto
+(29 rows)
+
+''' SELECTION  '''
+
+# senators in New York
+congressman=# select id, name, party, rank
+from senators
+where state = 'NY';
+ id  |        name        |  party   |  rank
+-----+--------------------+----------+--------
+ 364 | Kirsten Gillibrand | Democrat | Junior
+ 365 | Chuck Schumer      | Democrat | Senior
+(2 rows)
+
+# Republican Congressman in California
+congressman=# select * from senators
+congressman-# where party = 'Republican' and state = 'CA'
+congressman-# union
+congressman-# select * from representatives
+congressman-# where party = 'Republican' and state = 'CA';
+ id | state | branch |   party    |    rank     |      name
+----+-------+--------+------------+-------------+----------------
+ 77 | CA    | House  | Republican | District 22 | Devin Nunes
+ 78 | CA    | House  | Republican | District 23 | Kevin McCarthy
+ 81 | CA    | House  | Republican | District 8  | Paul Cook
+ 80 | CA    | House  | Republican | District 42 | Ken Calvert
+ 76 | CA    | House  | Republican | District 1  | Doug LaMalfa
+ 79 | CA    | House  | Republican | District 4  | Tom McClintock
+(6 rows)
+
+'''Natural Join'''
+
+# Urls for senators in Colorado
+congressman=# select *
+congressman-# from representatives, urls
+congressman-# where ^C
+congressman=# select name, url
+congressman-# from senators, urls
+congressman-# where senators.id = urls.id and senators.state = 'CO';
+      name      |                          url
+----------------+-------------------------------------------------------
+ Michael Bennet | https://votesmart.org/candidate/110942/michael-bennet
+ Cory Gardner   | https://votesmart.org/candidate/30004/cory-gardner
+(2 rows)
+
