@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    US Congressional Database
+{% endblock %}
+
+{% block body %}
+<div>
+    <h1>Select State</h1>
+    <ul>
+        {% for state in states %}
+            <li><a href="{% url 'state' state %}">{{ state }}</a></li>
+        {%endfor%}
+    </ul>
+</div>
+
+{% endblock %}
+

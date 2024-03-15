@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block title %}
+{{ state_name }}
+{% endblock %}
+
+{% block body %}
+<h1>{{state_name}}</h1>
+<ul>
+    <li><a href="{% url 'senate' state_name %}">Senate</a></li>
+    <li><a href="{% url 'house' state_name %}">House</a></li>
+</ul>
+{% endblock %}
+
