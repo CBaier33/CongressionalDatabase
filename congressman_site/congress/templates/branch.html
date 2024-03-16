@@ -7,8 +7,13 @@
 {% block body %}
 <h1>{{state_name}} {{branch_name}}</h1>
 <ul>
-    {% for member in members%}
-    <li>{{member}}</li>
+    {% for member in members %}
+        {% if branch_name == "Senate" %}
+        <li><a href="{% url 'senator' member %}">{{member}}</a></li>
+        {%endif%}
+        {% if branch_name == "House" %}
+        <li><a href="{% url 'representative' member %}">{{member}}</a></li>
+        {%endif%}
     {%endfor%}
 </ul>
 {% endblock %}

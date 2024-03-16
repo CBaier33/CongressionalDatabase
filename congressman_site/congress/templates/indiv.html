@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    US Congressional Database
+{% endblock %}
+
+{% block body %}
+<h1>{{indiv.name}}</h1>
+<div>
+    <ul>
+        <li>State: {{indiv.state}}</li>
+        <li>Party: {{indiv.party}}</li>
+        {% if indiv.branch == "Senate" %}
+            <li>Rank: {{indiv.rank}}</li>
+        {%endif%}
+        {% if indiv.branch == "House" %}
+            <li>Region: {{indiv.district}}</li>
+        {%endif%}
+    </ul>
+    <a href="{{link}}">View More Information</a>
+</div>
+
+{% endblock %}

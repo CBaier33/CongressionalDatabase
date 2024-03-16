@@ -87,7 +87,7 @@ congressman-# where party = 'Democrat';
  352 | NY    | House  | Democrat | District 3  | Thomas Suozzi
 ...
 
-# All Florida Congressman
+# All Republican Congressman
 congressman=# select * from senators
 where state = 'FL'
 union
