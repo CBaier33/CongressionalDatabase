@@ -1,4 +1,7 @@
 .top {
-    text-align: center;
     border-bottom-style: solid;
+}
+
+#header {
+    text-align: center;
 }

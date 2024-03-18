@@ -1,3 +1,4 @@
+sudo service postgresql start
 sudo -u postgres psql congressman
 
 congressman=# \dt
@@ -158,9 +159,6 @@ congressman-# where party = 'Republican' and state = 'CA';
 '''Natural Join'''
 
 # Urls for senators in Colorado
-congressman=# select *
-congressman-# from representatives, urls
-congressman-# where ^C
 congressman=# select name, url
 congressman-# from senators, urls
 congressman-# where senators.id = urls.id and senators.state = 'CO';

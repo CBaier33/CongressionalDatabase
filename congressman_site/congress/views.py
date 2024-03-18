@@ -1,13 +1,12 @@
-from django.shortcuts import render
-from . import util
-from . import models
 import re
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from . import util, models
 
 # Create your views here.
 
 def index(request):
-    state = util.State()
-    state_list = state.list
+    state_list = util.list_states()
     return render(request, 'index.html', {
         "states": state_list
         })
@@ -50,3 +49,24 @@ def representative(request, name):
         "indiv": representative,
         "link": link
         })
+
+def search(request):
+   q = None
+   
+   senators = models.Senators.objects.all()
+   senate_names = list(senator.name for senator in senators)
+
+   reps = models.Senators.objects.all()
+   rep_names = list(rep.name for rep in reps)
+
+   if request.method == "POST":
+        res = request.POST
+        q = res['search']
+
+   if q in senate_names:
+       return redirect("senator", name=q)
+
+   elif q in rep_names:
+       return redirect("representative", name=q)
+
+   return HttpResponse("No Results Found.")

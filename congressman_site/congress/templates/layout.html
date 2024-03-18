@@ -10,7 +10,16 @@
 
     <body>
         <div class="top">
-            <h1>United States Congressional Database</h1>
+            <h1 id="header">United States Congressional Database</h1>
+
+            <a href="javascript:history.go(-1)">Back</a>
+            <a href="{% url 'index' %}">Home</a>
+
+            <form action="{% url 'search' %}" method="post">
+                {% csrf_token %} 
+                <input type="text" name="search" placeholder="Search Congress">
+            </form>
+
         </div>
         <div>
             {% block body %}
